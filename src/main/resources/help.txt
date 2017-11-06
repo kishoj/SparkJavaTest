@@ -1,0 +1,3 @@
+Running Spark:
+$ cd /usr/local/spark
+$ sudo ./sbin/start-master.sh
