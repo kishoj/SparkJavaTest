@@ -12,6 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mysql-connector-java.version>6.0.6</mysql-connector-java.version>
 	</properties>
 
 	<build>
@@ -63,13 +64,26 @@
 			<artifactId>postgresql</artifactId>
 			<version>42.1.4</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/com.datastax.spark/spark-cassandra-connector_2.11 -->
 		<dependency>
-		    <groupId>com.datastax.spark</groupId>
-		    <artifactId>spark-cassandra-connector_2.11</artifactId>
-		    <version>2.0.5</version>
+			<groupId>com.datastax.spark</groupId>
+			<artifactId>spark-cassandra-connector_2.11</artifactId>
+			<version>2.0.5</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql-connector-java.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.mongodb.spark/mongo-spark-connector_2.11 -->
+		<dependency>
+			<groupId>org.mongodb.spark</groupId>
+			<artifactId>mongo-spark-connector_2.11</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+
 	</dependencies>
 </project>

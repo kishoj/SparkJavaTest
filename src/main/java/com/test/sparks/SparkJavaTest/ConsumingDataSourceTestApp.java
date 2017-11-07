@@ -15,10 +15,14 @@ public class ConsumingDataSourceTestApp {
 				  .builder()
 				  .appName("Multiple Source Java App")
 				  .master(SparkKeyword.SPARK_LOCAL)
-				  .config("spark.cassandra.connection.host", "localhost")
-				  .config("spark.cassandra.connection.port", "9042")
-				  .config("spark.cores.max", "4")
-				  .config("spark.driver.allowMultipleContexts", true)
+				   // For Cassandra
+				  .config(SparkKeyword.CASSANDRA_HOST, "localhost")
+				  .config(SparkKeyword.CASSANDRA_PORT, "9042")
+				  .config(SparkKeyword.SPARK_CORE_MAX, "4")
+				  .config(SparkKeyword.SPARK_MULTIPLE_CONTEXT, true)
+				   // For MongoDB 
+				  .config(SparkKeyword.SPARK_MONGO_INPUT_URI, "mongodb://127.0.0.1/mongodbtest.professions")
+				  .config(SparkKeyword.SPARK_MONGO_OUTPUT_URI, "mongodb://127.0.0.1/mongodbtest.professions")
 				  .config("developer", "Kishoj Bajracharya")				  
 				  .getOrCreate();
 		
@@ -36,11 +40,19 @@ public class ConsumingDataSourceTestApp {
 		SparkDataSource.CASSANDRA.getDataSet(sparkSession).createOrReplaceTempView("user_emails");
 		sparkSession.sql("SELECT * FROM user_emails").show();
 		
+		SparkDataSource.MYSQL.getDataSet(sparkSession).createOrReplaceTempView("phones");
+		sparkSession.sql("SELECT * FROM phones").show();
+		
+		SparkDataSource.MONGODB.getDataSet(sparkSession).createOrReplaceTempView("professions");
+		sparkSession.sql("SELECT * FROM professions").show();
+		
 		// Joining tables in Spark
-		String query = "SELECT u.id, u.first_name, u.last_name, r.age, r.city, e.education, e.university, ue.email FROM "
+		String query = "SELECT u.id, u.first_name, u.last_name, r.age, r.city, e.education, e.university, ue.email, p.phone, pr.professions FROM "
 						+ " users u JOIN records r ON r.firstname = u.first_name " 
 						+ " JOIN educations e ON e.firstName = u.first_name "
-						+ " JOIN user_emails ue ON ue.first_name = u.first_name";
+						+ " JOIN user_emails ue ON ue.first_name = u.first_name "
+						+ " JOIN phones p ON p.first_name = u.first_name "
+						+ " JOIN professions pr ON pr.firstname = u.first_name";
 		sparkSession.sql(query).show();
 		
 		System.out.println("Tutorial By: " + sparkSession.conf().get("developer"));

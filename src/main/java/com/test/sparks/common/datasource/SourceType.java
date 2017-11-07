@@ -4,5 +4,7 @@ public enum SourceType {
 	POSTGRESQL,
 	CASSANDRA,
 	JSON,
-	CSV
+	CSV, 
+	MYSQL, 
+	MONGODB
 }

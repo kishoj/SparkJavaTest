@@ -9,7 +9,8 @@ import com.test.sparks.common.ResourceProperties;
 public interface JsonDataSource extends ResourceProperties {
 
 	default Dataset<Row> getDataSet(SparkSession sparkSession) {
-		return sparkSession.read().json(CLASS_LOADER.getResource(JSON_LOCATION).toString());
+		return sparkSession.read()
+					.json(CLASS_LOADER.getResource(JSON_LOCATION).toString());
 	}
 
 }

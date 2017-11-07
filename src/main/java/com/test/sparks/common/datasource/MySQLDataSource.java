@@ -11,21 +11,21 @@ import com.test.sparks.common.PropertiesLoader;
 import com.test.sparks.common.PropertyKey;
 import com.test.sparks.common.SparkKeyword;
 
-public interface PostgreSQLDataSource extends SparkKeyword, PropertyKey, PropertiesLoader {
-
+public interface MySQLDataSource extends SparkKeyword, PropertiesLoader, PropertyKey {
+	
 	default Dataset<Row> getDataSet(SparkSession sparkSession) {
-		Optional<Properties> maybeProperties = loadPropertiesFromFile(POSTGRESQL_PROPERTIES);
-
+		Optional<Properties> maybeProperties = loadPropertiesFromFile(MYSQL_PROPERTIES);		
+		
 		if (maybeProperties.isPresent()) {
 			Properties properties = maybeProperties.get();
+			
 			return sparkSession.read().format(JDBC)
-					.option(URL, properties.getProperty(POSTGRESQL_URL))
-					.option(DBTABLE, properties.getProperty(POSTGRESQL_DB_TABLE))
-					.option(USER, properties.getProperty(POSTGRESQL_USER))
-					.option(PASSWORD, properties.getProperty(POSTGRESQL_PASSWORD))
+					.option(URL, properties.getProperty(MYSQL_URL))
+					.option(DBTABLE, properties.getProperty(MYSQL_DB_TABLE))
+					.option(USER, properties.getProperty(MYSQL_USER))
+					.option(PASSWORD, properties.getProperty(MYSQL_PASSWORD))
 					.load();
 		}
 		return null;
 	}
-
 }
