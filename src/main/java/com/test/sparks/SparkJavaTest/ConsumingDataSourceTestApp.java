@@ -13,19 +13,38 @@ public class ConsumingDataSourceTestApp {
 		
 		SparkSession sparkSession = SparkSession
 				  .builder()
-				  .appName("SPARK SQL Test2")
-				  .config(SparkKeyword.MASTER, SparkKeyword.SPARK_LOCAL)
+				  .appName("Multiple Source Java App")
+				  .master(SparkKeyword.SPARK_LOCAL)
+				  .config("spark.cassandra.connection.host", "localhost")
+				  .config("spark.cassandra.connection.port", "9042")
+				  .config("spark.cores.max", "4")
+				  .config("spark.driver.allowMultipleContexts", true)
+				  .config("developer", "Kishoj Bajracharya")				  
 				  .getOrCreate();
 		
+		
 		Dataset<Row> jsonDF =  SparkDataSource.JSON.getDataSet(sparkSession);		
-		jsonDF.show();
 		jsonDF.createOrReplaceTempView("records");		
 		sparkSession.sql("SELECT * FROM records").show();
 		
 		SparkDataSource.POSTGRESQL.getDataSet(sparkSession).createOrReplaceTempView("users");		
 		sparkSession.sql("SELECT * FROM users").show();
 		
+		SparkDataSource.CSV.getDataSet(sparkSession).createOrReplaceTempView("educations");
+		sparkSession.sql("SELECT * FROM educations").show();
+		
+		SparkDataSource.CASSANDRA.getDataSet(sparkSession).createOrReplaceTempView("user_emails");
+		sparkSession.sql("SELECT * FROM user_emails").show();
+		
 		// Joining tables in Spark
-		sparkSession.sql("SELECT u.id, u.first_name, u.last_name, r.age, r.city FROM users u JOIN records r ON r.firstname = u.first_name").show();
+		String query = "SELECT u.id, u.first_name, u.last_name, r.age, r.city, e.education, e.university, ue.email FROM "
+						+ " users u JOIN records r ON r.firstname = u.first_name " 
+						+ " JOIN educations e ON e.firstName = u.first_name "
+						+ " JOIN user_emails ue ON ue.first_name = u.first_name";
+		sparkSession.sql(query).show();
+		
+		System.out.println("Tutorial By: " + sparkSession.conf().get("developer"));
+		
+		sparkSession.close();
 	}
 }

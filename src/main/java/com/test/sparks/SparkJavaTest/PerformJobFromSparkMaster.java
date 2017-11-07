@@ -14,7 +14,8 @@ public class PerformJobFromSparkMaster {
 				  .builder()
 				  .appName("SPARK SQL Test1")
 				  .master(SparkKeyword.SPARK_MASTER)
-				  //.config("spark.executor.extraClassPath", "/home/kishoj/.m2/repository/org/postgresql/postgresql/9.4.1212/postgresql-9.4.1212.jar")
+				  //.master(SparkKeyword.SPARK_MASTER)
+				  //.config(SparkKeyword.MASTER, SparkKeyword.SPARK_MASTER)
 				  .getOrCreate();
 		
 		/*Dataset<Row> jsonDF =  SparkDataSource.JSON.getDataSet(sparkSession);		
