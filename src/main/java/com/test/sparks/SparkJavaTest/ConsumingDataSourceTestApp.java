@@ -23,6 +23,12 @@ public class ConsumingDataSourceTestApp {
 				   // For MongoDB 
 				  .config(SparkKeyword.SPARK_MONGO_INPUT_URI, "mongodb://127.0.0.1/mongodbtest.professions")
 				  .config(SparkKeyword.SPARK_MONGO_OUTPUT_URI, "mongodb://127.0.0.1/mongodbtest.professions")
+				  
+				  //.config("spark.driver.allowMultipleContexts", "true")
+				  .config("spark.neo4j.bolt.user", "neo4j")
+				  .config("spark.neo4j.bolt.password", "pass")
+				  .config("spark.neo4j.bolt.url", "bolt://localhost:7687")
+				  
 				  .config("developer", "Kishoj Bajracharya")				  
 				  .getOrCreate();
 		
@@ -46,13 +52,17 @@ public class ConsumingDataSourceTestApp {
 		SparkDataSource.MONGODB.getDataSet(sparkSession).createOrReplaceTempView("professions");
 		sparkSession.sql("SELECT * FROM professions").show();
 		
+		SparkDataSource.NEO4J.getDataSet(sparkSession).createOrReplaceTempView("languages");
+		sparkSession.sql("SELECT * FROM languages").show();
+		
 		// Joining tables in Spark
-		String query = "SELECT u.id, u.first_name, u.last_name, r.age, r.city, e.education, e.university, ue.email, p.phone, pr.professions FROM "
+		String query = "SELECT u.id, u.first_name, u.last_name, r.age, r.city, e.education, e.university, ue.email, p.phone, pr.professions, l.workingLanguage FROM "
 						+ " users u JOIN records r ON r.firstname = u.first_name " 
 						+ " JOIN educations e ON e.firstName = u.first_name "
 						+ " JOIN user_emails ue ON ue.first_name = u.first_name "
 						+ " JOIN phones p ON p.first_name = u.first_name "
-						+ " JOIN professions pr ON pr.firstname = u.first_name";
+						+ " JOIN professions pr ON pr.firstname = u.first_name "
+						+ " JOIN languages l ON l.name = u.first_name";
 		sparkSession.sql(query).show();
 		
 		System.out.println("Tutorial By: " + sparkSession.conf().get("developer"));

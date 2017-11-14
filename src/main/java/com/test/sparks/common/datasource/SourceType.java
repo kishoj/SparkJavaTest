@@ -6,5 +6,6 @@ public enum SourceType {
 	JSON,
 	CSV, 
 	MYSQL, 
-	MONGODB
+	MONGODB, 
+	NEO4J
 }
