@@ -4,7 +4,8 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
-public enum SparkDataSource implements JsonDataSource, PostgreSQLDataSource, CSVDataSource, CassandraDataSource, MySQLDataSource, MongoDBDataSource, Neo4jDataSource {
+public enum SparkDataSource implements JsonDataSource, PostgreSQLDataSource, CSVDataSource, 
+		CassandraDataSource, MySQLDataSource, MongoDBDataSource, Neo4jDataSource, CouchDBDataSource {
 	
 	POSTGRESQL(SourceType.POSTGRESQL), 
 	MYSQL(SourceType.MYSQL),
@@ -12,7 +13,8 @@ public enum SparkDataSource implements JsonDataSource, PostgreSQLDataSource, CSV
 	MONGODB(SourceType.MONGODB),
 	NEO4J(SourceType.NEO4J),
 	JSON(SourceType.JSON), 
-	CSV(SourceType.CSV);
+	CSV(SourceType.CSV), 
+	COUCHDB(SourceType.COUCHDB);
 	
 	private SourceType source;
 
@@ -41,6 +43,8 @@ public enum SparkDataSource implements JsonDataSource, PostgreSQLDataSource, CSV
 				return MongoDBDataSource.super.getDataSet(sparkSession);
 			case NEO4J:
 				return Neo4jDataSource.super.getDataSet(sparkSession);
+			case COUCHDB:
+				return CouchDBDataSource.super.getDataSet(sparkSession);
 			default:
 				return null;
 		}
