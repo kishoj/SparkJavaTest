@@ -4,6 +4,7 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
+import com.test.sparks.common.SparkAppName;
 import com.test.sparks.common.SparkKeyword;
 import com.test.sparks.common.datasource.SparkDataSource;
 
@@ -13,7 +14,7 @@ public class ConsumingDataSourceTestApp {
 		
 		SparkSession sparkSession = SparkSession
 				  .builder()
-				  .appName("Multiple Source Java App")
+				  .appName(SparkAppName.MULTIPLE_SOURCR_CONSUMER.getValue())
 				  .master(SparkKeyword.SPARK_LOCAL)
 				   // For Cassandra
 				  .config(SparkKeyword.CASSANDRA_HOST, "localhost")
@@ -24,17 +25,17 @@ public class ConsumingDataSourceTestApp {
 				  .config(SparkKeyword.SPARK_MONGO_INPUT_URI, "mongodb://127.0.0.1/mongodbtest.professions")
 				  .config(SparkKeyword.SPARK_MONGO_OUTPUT_URI, "mongodb://127.0.0.1/mongodbtest.professions")
 				  // For Neo4j
-				  .config("spark.neo4j.bolt.user", "neo4j")
-				  .config("spark.neo4j.bolt.password", "pass")
-				  .config("spark.neo4j.bolt.url", "bolt://localhost:7687")
+				  .config(SparkKeyword.NEO4J_USER, "neo4j")
+				  .config(SparkKeyword.NEO4J_PASSWORD, "pass")
+				  .config(SparkKeyword.NEO4J_URL, "bolt://localhost:7687")
 				  // For CouchDB
-				  .config("cloudant.protocol", "http")
-				  .config("cloudant.host","127.0.0.1:5984")
-				  .config("cloudant.username", "admin")
-				  .config("cloudant.password","pass")
-				  .config("couchdb.database", "favorites")
+				  .config(SparkKeyword.COUCHDB_DB_PROTOCOL, "http")
+				  .config(SparkKeyword.COUCHDB_DB_HOST,"127.0.0.1:5984")
+				  .config(SparkKeyword.COUCHDB_DB_USENAME, "admin")
+				  .config(SparkKeyword.COUCHDB_DB_PASSWORD,"pass")
+				  .config(SparkKeyword.COUCHDB_DB_NAME, "favorites")
 				  
-				  .config("developer", "Kishoj Bajracharya")				  
+				  .config(SparkKeyword.DEVELOPER, "Kishoj Bajracharya")				  
 				  .getOrCreate();
 		
 		Dataset<Row> jsonDF =  SparkDataSource.JSON.getDataSet(sparkSession);		
@@ -63,16 +64,20 @@ public class ConsumingDataSourceTestApp {
 		sparkSession.sql("SELECT * FROM favorites").show();	
 		
 		// Joining tables in Spark
-		String query = "SELECT u.id, u.first_name, u.last_name, r.age, r.city, e.education, e.university, "
-						+ " ue.email, p.phone, pr.professions, l.workingLanguage, "
-						+ " f.favorite_drink, f.favorite_food FROM "
-						+ " users u JOIN records r ON r.firstname = u.first_name " 
-						+ " JOIN educations e ON e.firstName = u.first_name "
-						+ " JOIN user_emails ue ON ue.first_name = u.first_name "
-						+ " JOIN phones p ON p.first_name = u.first_name "
-						+ " JOIN professions pr ON pr.firstname = u.first_name "
-						+ " JOIN languages l ON l.name = u.first_name "
-						+ " JOIN favorites f ON f.first_name = u.first_name ";
+		StringBuilder str = new StringBuilder();
+		str.append(" SELECT u.id, u.first_name, u.last_name, r.age, r.city, e.education, e.university, ");
+		str.append("      ue.email, p.phone, pr.professions, l.workingLanguage, ");
+		str.append("      f.favorite_drink, f.favorite_food ");
+		str.append(" FROM ");
+		str.append("      users u JOIN records r ON r.firstname = u.first_name ");
+		str.append("      JOIN educations e ON e.firstName = u.first_name ");
+		str.append("      JOIN user_emails ue ON ue.first_name = u.first_name ");
+		str.append("      JOIN phones p ON p.first_name = u.first_name ");
+		str.append("      JOIN professions pr ON pr.firstname = u.first_name ");
+		str.append("      JOIN languages l ON l.name = u.first_name ");
+		str.append("      JOIN favorites f ON f.first_name = u.first_name ");
+		
+		String query = str.toString();
 		sparkSession.sql(query).show();
 		
 		System.out.println("Tutorial By: " + sparkSession.conf().get("developer"));

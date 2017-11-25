@@ -4,10 +4,13 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.neo4j.spark.Neo4JavaSparkContext;
 
+import com.test.sparks.common.SparkAppName;
+import com.test.sparks.common.SparkKeyword;
+
 import java.util.Map;
 import java.util.Collections;
 
-public class ConsumingNeo4jDataSource {
+public class ConsumingNeo4jDataSource implements SparkKeyword {
 	
 	public static final Map<String, Object> PARAMS = Collections.<String, Object>singletonMap("name", "Kishoj");
 
@@ -16,11 +19,12 @@ public class ConsumingNeo4jDataSource {
 
 	public static void main(String[] args) {
 		SparkConf sparkConf = new SparkConf()
-							.setAppName("SOME APP NAME").setMaster("local[4]")
-							.set("spark.driver.allowMultipleContexts", "true")
-							.set("spark.neo4j.bolt.user", "neo4j")
-							.set("spark.neo4j.bolt.password", "pass")
-							.set("spark.neo4j.bolt.url", "bolt://localhost:7687");
+							.setAppName(SparkAppName.NEO4J_CONSUMER.getValue())
+							.setMaster(SPARK_LOCAL)
+							.set(SPARK_MULTIPLE_CONTEXT, "true")
+							.set(NEO4J_USER, "neo4j")
+							.set(NEO4J_PASSWORD, "pass")
+							.set(NEO4J_URL, "bolt://localhost:7687");
 		
 		JavaSparkContext sc = new JavaSparkContext(sparkConf);
 		Neo4JavaSparkContext csc  = Neo4JavaSparkContext.neo4jContext(sc);

@@ -12,15 +12,18 @@ import org.apache.spark.streaming.api.java.JavaPairInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
 
+import com.test.sparks.common.SparkAppName;
+import com.test.sparks.common.SparkKeyword;
+
 import kafka.serializer.StringDecoder;
 
 
-public class ConsumingKafkaDataSource {
+public class ConsumingKafkaDataSource implements SparkKeyword {
 	
 	public static void main(String[] args) throws InterruptedException {
 		SparkConf conf = new SparkConf()
-                .setAppName("kafka-sandbox")
-                .setMaster("local[*]");
+                .setAppName(SparkAppName.KAFKA_CONSUMER.getValue())
+                .setMaster(SPARK_LOCAL);
         JavaSparkContext sc = new JavaSparkContext(conf);
         JavaStreamingContext ssc = new JavaStreamingContext(sc, new Duration(2000));
 

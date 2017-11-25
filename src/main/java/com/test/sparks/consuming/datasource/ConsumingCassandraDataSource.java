@@ -1,4 +1,4 @@
-package com.test.sparks.SparkJavaTest;
+package com.test.sparks.consuming.datasource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,21 +13,22 @@ import com.datastax.driver.core.Session;
 import com.datastax.spark.connector.cql.CassandraConnector;
 import com.test.sparks.common.DataConverter;
 import com.test.sparks.common.Person;
+import com.test.sparks.common.SparkAppName;
 import com.test.sparks.common.SparkKeyword;
 
-public class ConsumingCassandraSource {
+public class ConsumingCassandraDataSource implements SparkKeyword {
 
 	public static void main(String[] args) {
 		
 		SparkSession spark = SparkSession
 				  .builder()
-				  .appName("Spark Cassandra App")
-				  .master(SparkKeyword.SPARK_LOCAL)
-				  .config("spark.cassandra.connection.host", "localhost")
-				  .config("spark.cassandra.connection.port", "9042")
-				  .config("spark.cores.max", "4")
-				  .config("spark.driver.allowMultipleContexts", "true")
-				  .config("developer", "Kishoj Bajracharya")				  
+				  .appName(SparkAppName.CASSANDRA_CONSUMER.getValue())
+				  .master(SPARK_LOCAL)
+				  .config(CASSANDRA_HOST, "localhost")
+				  .config(CASSANDRA_PORT, "9042")
+				  .config(SPARK_CORE_MAX, "4")
+				  .config(SPARK_MULTIPLE_CONTEXT, true)
+				  .config(DEVELOPER, "Kishoj Bajracharya")	
 				  .getOrCreate();
         
         List<Person> persons = new ArrayList<>();

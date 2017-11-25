@@ -14,18 +14,19 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import com.datastax.spark.connector.japi.CassandraRow;
 import com.datastax.spark.connector.japi.rdd.CassandraTableScanJavaRDD;
 import com.test.sparks.common.Person;
+import com.test.sparks.common.SparkKeyword;
 
 import static com.datastax.spark.connector.japi.CassandraJavaUtil.*;
 
-public class CassandraConnectionUsingSparkConf {
+public class CassandraConnectionUsingSparkConf implements SparkKeyword {
 
 	public static void main(String[] args) {
 		SparkConf conf = new SparkConf()
-					.setMaster("local[2]")
+					.setMaster(SPARK_LOCAL)
 					.setAppName("Java")
-					.set("spark.cassandra.connection.host", "127.0.0.1")
-					.set("spark.cassandra.connection.port", "9042")
-					.set("spark.driver.allowMultipleContexts", "true");
+					.set(CASSANDRA_HOST, "127.0.0.1")
+					.set(CASSANDRA_PORT, "9042")
+					.set(SPARK_MULTIPLE_CONTEXT, "true");
 		
 		JavaSparkContext sc = new JavaSparkContext(conf);		
 		JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(1L));		
